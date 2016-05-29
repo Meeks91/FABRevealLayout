@@ -36,7 +36,7 @@ import java.util.List;
 public class FABRevealLayout extends RelativeLayout {
 
     private static final int MAX_CHILD_VIEWS = 2;
-    private static final int FAB_SIZE = 0;
+    private static int FAB_SIZE = 48;
     private static final int ANIMATION_DURATION = 500;
     private final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
 
@@ -62,6 +62,11 @@ public class FABRevealLayout extends RelativeLayout {
     public FABRevealLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         childViews = new ArrayList<>(2);
+    }
+    
+    public void setFabSizeForMarginSpacing(int fabSize){
+        FAB_SIZE = fabSize;
+        invalidate();
     }
 
     @Override
