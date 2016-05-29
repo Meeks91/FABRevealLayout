@@ -130,8 +130,8 @@ public class FABRevealLayout extends RelativeLayout {
         params.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE);
         params.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE);
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            params.rightMargin = dipsToPixels(0.5f);
-            params.topMargin = dipsToPixels(17);
+            params.rightMargin = dipsToPixels(0.35f);
+            params.topMargin = dipsToPixels(16);
         }
         fab.bringToFront();
     }
