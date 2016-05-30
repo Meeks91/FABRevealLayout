@@ -76,15 +76,13 @@ public class FABRevealLayout extends RelativeLayout {
             else {
                 heightOfFabInPX = (int) ((screenWidthInPX / 4.3) /2);
             }
-            Log.v("FABRevealLayout", "fab size is: " + FAB_SIZE);
-        }
+             }
 
         FAB_SIZE = 48;
 
     }
 
     public void setViewHeight(int viewHeightForMenu, int viewHeight, int heightOfFabInPX, int howMuchPadding2RemoveForPrelollipop){
-       Log.v("FABRevealLayout", "set height called");
         this.viewHeight = viewHeight;
         this.viewHeightForMenu = viewHeightForMenu;
         this.howMuchPadding2RemoveForPrelollipop = (howMuchPadding2RemoveForPrelollipop - 13); //remove some pixels to stop black bar overlap
@@ -104,7 +102,6 @@ public class FABRevealLayout extends RelativeLayout {
 
     public FABRevealLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        Log.v("FABRevealLayout", "constructor called");
       if (isInEditMode() == false) {
           getSizeOfFab();
       }
@@ -116,7 +113,6 @@ public class FABRevealLayout extends RelativeLayout {
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
-        Log.v("FABRevealLayout", "addView called");
         setupView(child);
         super.addView(child, index, params);
 
@@ -163,14 +159,12 @@ public class FABRevealLayout extends RelativeLayout {
     private void addCircularRevealView() {
         circularExpandingView = new CircularExpandingView(getContext());
         circularRevealViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        Log.v("FABRevealLayout", "heightOfFabInPX is: " + heightOfFabInPX + " howMuchPadding2RemoveForPrelollipop is: " + howMuchPadding2RemoveForPrelollipop);
         circularExpandingView.setVisibility(View.GONE);
         addView(circularExpandingView, circularRevealViewParams);
     }
 
     private void updateMenusTopMargins(){
-        Log.v("FABRevealLayout", "heightOfFabInPX is: " + heightOfFabInPX + " howMuchPadding2RemoveForPrelollipop is: " + howMuchPadding2RemoveForPrelollipop);
-        circularRevealViewParams.topMargin = isLollipop == false ? (heightOfFabInPX/2) + howMuchPadding2RemoveForPrelollipop : (heightOfFabInPX/2) + dipsToPixels(5); //pushes container down
+       circularRevealViewParams.topMargin = isLollipop == false ? (heightOfFabInPX/2) + howMuchPadding2RemoveForPrelollipop : (heightOfFabInPX/2) + dipsToPixels(5); //pushes container down
        setupChildViewsPosition();
 
     }
