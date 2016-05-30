@@ -373,5 +373,5 @@ public class FABRevealLayout extends RelativeLayout {
         super.setLayoutParams(params);
     }
 
-
 }
+
