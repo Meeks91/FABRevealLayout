@@ -19,12 +19,16 @@ import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
+import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.view.animation.FastOutSlowInInterpolator;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.TypedValue;
+import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Interpolator;
@@ -378,7 +382,6 @@ public class FABRevealLayout extends RelativeLayout {
     }
 
     public static int getScreenWidthInDP(Activity context){
-
         Display display = context.getWindowManager().getDefaultDisplay();
         android.graphics.Point size = new android.graphics.Point();
         display.getSize(size);
@@ -387,9 +390,7 @@ public class FABRevealLayout extends RelativeLayout {
         DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
         int heightInDP = Math.round(width / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
-
         return heightInDP;
-
     }
 }
 
