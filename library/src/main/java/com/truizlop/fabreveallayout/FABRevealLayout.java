@@ -62,10 +62,10 @@ public class FABRevealLayout extends RelativeLayout {
 
 
     public void getSizeOfFab(){
-     float screenWidthInDP = Utilities.getScreenWidthInDP((Activity) getContext());
-    int screenWidthInPX = Utilities.getScreenHeightInPX((Activity) getContext());
+     float screenWidthInDP = getScreenWidthInDP((Activity) getContext());
+    int screenWidthInPX =  getScreenWidthInPX(getContext());
         if(screenWidthInDP <= 520) {
-            heightOfFabInPX = Utilities.dipsToPixels(28, getContext());
+            heightOfFabInPX = dipsToPixels(28);
         }
         else {
 
@@ -373,5 +373,29 @@ public class FABRevealLayout extends RelativeLayout {
         super.setLayoutParams(params);
     }
 
+
+    //MEEKS method to get screen widthOfFab
+    public int getScreenWidthInPX(Context context){
+        Display display = ((Activity)context).getWindowManager().getDefaultDisplay();
+        android.graphics.Point size = new android.graphics.Point();
+        display.getSize(size);
+        int width = size.x;
+        return width;
+    }
+
+    public static int getScreenWidthInDP(Activity context){
+
+        Display display = context.getWindowManager().getDefaultDisplay();
+        android.graphics.Point size = new android.graphics.Point();
+        display.getSize(size);
+        int width = size.x; //can be used to get heightOfFab of screen
+
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        int heightInDP = Math.round(width / (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+
+
+        return heightInDP;
+
+    }
 }
 
