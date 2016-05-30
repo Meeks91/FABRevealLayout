@@ -35,10 +35,14 @@ import java.util.List;
 
 public class FABRevealLayout extends RelativeLayout {
 
+    private boolean isLollipop;
     private static final int MAX_CHILD_VIEWS = 2;
-    private static int FAB_SIZE = 48;
+    private static int FAB_SIZE = 0;
+    private int howMuchPadding2RemoveForPrelollipop;
     private static final int ANIMATION_DURATION = 500;
+
     private final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
+
 
     private List<View> childViews = null;
     private FloatingActionButton fab = null;
@@ -51,6 +55,45 @@ public class FABRevealLayout extends RelativeLayout {
         }
     };
 
+
+    private int viewHeight = 0;
+    private int viewHeightForMenu;
+    private int heightOfFabInPX;
+
+
+    public void getSizeOfFab(){
+     float screenWidthInDP = Utilities.getScreenWidthInDP((Activity) getContext());
+    int screenWidthInPX = Utilities.getScreenHeightInPX((Activity) getContext());
+        if(screenWidthInDP <= 520) {
+            heightOfFabInPX = Utilities.dipsToPixels(28, getContext());
+        }
+        else {
+
+            if (Build.VERSION.SDK_INT >= 21) {
+                isLollipop = true;
+                heightOfFabInPX = (int) ((screenWidthInPX / 5.9)/2);
+            }
+            else {
+                heightOfFabInPX = (int) ((screenWidthInPX / 4.3) /2);
+            }
+            Log.v("FABRevealLayout", "fab size is: " + FAB_SIZE);
+        }
+
+        FAB_SIZE = 48;
+
+    }
+
+    public void setViewHeight(int viewHeightForMenu, int viewHeight, int heightOfFabInPX, int howMuchPadding2RemoveForPrelollipop){
+       Log.v("FABRevealLayout", "set height called");
+        this.viewHeight = viewHeight;
+        this.viewHeightForMenu = viewHeightForMenu;
+        this.howMuchPadding2RemoveForPrelollipop = (howMuchPadding2RemoveForPrelollipop - 13); //remove some pixels to stop black bar overlap
+        updateMenusTopMargins();
+        invalidate();
+    }
+
+
+
     public FABRevealLayout(Context context) {
         this(context, null);
     }
@@ -61,16 +104,19 @@ public class FABRevealLayout extends RelativeLayout {
 
     public FABRevealLayout(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        Log.v("FABRevealLayout", "constructor called");
+      if (isInEditMode() == false) {
+          getSizeOfFab();
+      }
         childViews = new ArrayList<>(2);
-    }
-    
-    public void setFabSizeForMarginSpacing(int fabSize){
-        FAB_SIZE = fabSize;
-        invalidate();
+
+
+
     }
 
     @Override
     public void addView(View child, int index, ViewGroup.LayoutParams params) {
+        Log.v("FABRevealLayout", "addView called");
         setupView(child);
         super.addView(child, index, params);
 
@@ -113,12 +159,20 @@ public class FABRevealLayout extends RelativeLayout {
         }
     }
 
+    LayoutParams circularRevealViewParams;
     private void addCircularRevealView() {
         circularExpandingView = new CircularExpandingView(getContext());
-        LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-        params.topMargin = dipsToPixels(FAB_SIZE);
+        circularRevealViewParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+        Log.v("FABRevealLayout", "heightOfFabInPX is: " + heightOfFabInPX + " howMuchPadding2RemoveForPrelollipop is: " + howMuchPadding2RemoveForPrelollipop);
         circularExpandingView.setVisibility(View.GONE);
-        addView(circularExpandingView, params);
+        addView(circularExpandingView, circularRevealViewParams);
+    }
+
+    private void updateMenusTopMargins(){
+        Log.v("FABRevealLayout", "heightOfFabInPX is: " + heightOfFabInPX + " howMuchPadding2RemoveForPrelollipop is: " + howMuchPadding2RemoveForPrelollipop);
+        circularRevealViewParams.topMargin = isLollipop == false ? (heightOfFabInPX/2) + howMuchPadding2RemoveForPrelollipop : (heightOfFabInPX/2) + dipsToPixels(5); //pushes container down
+       setupChildViewsPosition();
+
     }
 
     private boolean areAllComponentsReady(){
@@ -127,7 +181,7 @@ public class FABRevealLayout extends RelativeLayout {
 
     private void setupInitialState(){
         setupFABPosition();
-        setupChildViewsPosition();
+        //setupChildViewsPosition();
     }
 
     private void setupFABPosition(){
@@ -143,7 +197,7 @@ public class FABRevealLayout extends RelativeLayout {
     private void setupChildViewsPosition(){
         for(int i = 0; i < childViews.size(); i++){
             RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) childViews.get(i).getLayoutParams();
-            params.topMargin = dipsToPixels(FAB_SIZE);
+            params.topMargin = isLollipop == false ? (heightOfFabInPX/2) + howMuchPadding2RemoveForPrelollipop : (heightOfFabInPX/2) + dipsToPixels(5); //pushed content's of container down
         }
         getSecondaryView().setVisibility(GONE);
     }
@@ -191,10 +245,10 @@ public class FABRevealLayout extends RelativeLayout {
     }
 
     private void prepareForReveal() {
-        circularExpandingView.getLayoutParams().height = getMainView().getHeight();
+        circularExpandingView.getLayoutParams().height = viewHeightForMenu - (heightOfFabInPX/2);
         circularExpandingView.setColor(fab.getBackgroundTintList() != null ?
-                        fab.getBackgroundTintList().getDefaultColor() :
-                        0xFF000000
+                fab.getBackgroundTintList().getDefaultColor() :
+                0xFF000000
         );
         circularExpandingView.setVisibility(VISIBLE);
     }
@@ -315,8 +369,9 @@ public class FABRevealLayout extends RelativeLayout {
 
     @Override
     public void setLayoutParams(ViewGroup.LayoutParams params) {
-        ((MarginLayoutParams) params).topMargin -= dipsToPixels(FAB_SIZE);
+       // ((MarginLayoutParams) params).topMargin -= dipsToPixels(100);
         super.setLayoutParams(params);
     }
+
 
 }
