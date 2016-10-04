@@ -44,6 +44,7 @@ public class FABRevealLayout extends RelativeLayout {
     private static int FAB_SIZE = 0;
     private int howMuchPadding2RemoveForPrelollipop;
     private static final int ANIMATION_DURATION = 500;
+    private boolean isAnimating = false; 
 
     private final Interpolator INTERPOLATOR = new FastOutSlowInInterpolator();
 
@@ -220,9 +221,12 @@ public class FABRevealLayout extends RelativeLayout {
         this.onRevealChangeListener = onRevealChangeListener;
     }
 
-    private void startRevealAnimation(){
+    private void startRevealAnimation(){      
+        if (isAnimating == false) {
+            isAnimating = true; 
+        
         View disappearingView = getMainView();
-        fab.setClickable(false);
+      //  fab.setClickable(false);
 
         ObjectAnimator fabAnimator = getFABAnimator();
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(disappearingView, "alpha", 1, 0);
@@ -241,6 +245,7 @@ public class FABRevealLayout extends RelativeLayout {
         } );
 
         set.start();
+        }
     }
 
     private void prepareForReveal() {
@@ -284,14 +289,18 @@ public class FABRevealLayout extends RelativeLayout {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 swapViews();
-                fab.setClickable(true); 
+                //fab.setClickable(true); 
+                isAnimating = false; 
             }
         });
         expandAnimator.start();
     }
 
     private void startHideAnimation(){
-        fab.setClickable(false);
+       // fab.setClickable(false);
+        
+        if (isAnimating == false) {   
+            isAnimating = true; 
         Animator contractAnimator = circularExpandingView.contract();
         View disappearingView = getSecondaryView();
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(disappearingView, "alpha", 1, 0);
@@ -309,6 +318,7 @@ public class FABRevealLayout extends RelativeLayout {
             }
         });
         set.start();
+        }
     }
 
     private void moveFABToOriginalLocation(){
@@ -320,7 +330,8 @@ public class FABRevealLayout extends RelativeLayout {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 swapViews();
-                fab.setClickable(true);
+                //fab.setClickable(true);
+                isAnimating = false; 
             }
         });
 
