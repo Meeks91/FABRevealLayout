@@ -222,6 +222,7 @@ public class FABRevealLayout extends RelativeLayout {
 
     private void startRevealAnimation(){
         View disappearingView = getMainView();
+        fab.setClickable(false);
 
         ObjectAnimator fabAnimator = getFABAnimator();
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(disappearingView, "alpha", 1, 0);
@@ -283,12 +284,14 @@ public class FABRevealLayout extends RelativeLayout {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 swapViews();
+                fab.setClickable(true); 
             }
         });
         expandAnimator.start();
     }
 
     private void startHideAnimation(){
+        fab.setClickable(false);
         Animator contractAnimator = circularExpandingView.contract();
         View disappearingView = getSecondaryView();
         ObjectAnimator alphaAnimator = ObjectAnimator.ofFloat(disappearingView, "alpha", 1, 0);
@@ -317,6 +320,7 @@ public class FABRevealLayout extends RelativeLayout {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 swapViews();
+                fab.setClickable(true);s
             }
         });
 
