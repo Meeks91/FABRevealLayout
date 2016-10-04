@@ -320,7 +320,7 @@ public class FABRevealLayout extends RelativeLayout {
             public void onAnimationEnd(Animator animation) {
                 super.onAnimationEnd(animation);
                 swapViews();
-                fab.setClickable(true);s
+                fab.setClickable(true)
             }
         });
 
